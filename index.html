@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artist Schedule Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        h2 {
+            text-align: center;
+        }
+        label, input, textarea, button {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+    <script>
+        function submitForm() {
+            const formData = {
+                name: document.getElementById("name").value,
+                event: document.getElementById("event").value,
+                date: document.getElementById("date").value,
+                startTime: document.getElementById("startTime").value,
+                endTime: document.getElementById("endTime").value,
+                location: document.getElementById("location").value,
+                details: document.getElementById("details").value
+            };
+
+            fetch('https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec', {
+                method: 'POST',
+                body: JSON.stringify(formData),
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert("Submitted Successfully!");
+                document.getElementById("scheduleForm").reset();
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</head>
+<body>
+    <h2>Artist Schedule Form</h2>
+    <form id="scheduleForm">
+        <label for="name">Artist Name:</label>
+        <input type="text" id="name" required>
+
+        <label for="event">Event:</label>
+        <input type="text" id="event" required>
+
+        <label for="date">Date:</label>
+        <input type="date" id="date" required>
+
+        <label for="startTime">Start Time:</label>
+        <input type="time" id="startTime" required>
+
+        <label for="endTime">End Time:</label>
+        <input type="time" id="endTime" required>
+
+        <label for="location">Location:</label>
+        <input type="text" id="location">
+
+        <label for="details">Details:</label>
+        <textarea id="details"></textarea>
+
+        <button type="button" onclick="submitForm()">Submit</button>
+    </form>
+</body>
+</html>
