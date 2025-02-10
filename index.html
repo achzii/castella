@@ -37,55 +37,49 @@
     </style>
     <script>
         async function submitForm() {
-            const button = document.querySelector("button");
-            button.classList.add("loading"); // ป้องกันการกดซ้ำ
+    const formData = {
+        name: document.getElementById("name").value.trim(),
+        event: document.getElementById("event").value.trim(),
+        date: document.getElementById("date").value.trim(),
+        startTime: document.getElementById("startTime").value.trim(),
+        endTime: document.getElementById("endTime").value.trim(),
+        location: document.getElementById("location").value.trim(),
+        details: document.getElementById("details").value.trim()
+    };
 
-            const formData = {
-                name: document.getElementById("name").value.trim(),
-                event: document.getElementById("event").value.trim(),
-                date: document.getElementById("date").value.trim(),
-                startTime: document.getElementById("startTime").value.trim(),
-                endTime: document.getElementById("endTime").value.trim(),
-                location: document.getElementById("location").value.trim(),
-                details: document.getElementById("details").value.trim()
-            };
+    if (!formData.name || !formData.event || !formData.date || !formData.startTime || !formData.endTime) {
+        alert("❌ Please fill in all required fields.");
+        return;
+    }
 
-            if (!formData.name || !formData.event || !formData.date || !formData.startTime || !formData.endTime) {
-                alert("❌ Please fill in all required fields.");
-                button.classList.remove("loading");
-                return;
-            }
+    console.log("📤 Sending data:", formData);
 
-            console.log("📤 Sending data:", formData);
+    try {
+        const response = await fetch('https://script.google.com/macros/s/AKfycbzsGgkvhYRhGWXvenaKqkpjTYtovmIDKp0mWN76HbNhrdvi_FcO0_y9-KmsR1Tj-sYiBA/exec', {
+            method: 'POST',
+            body: JSON.stringify(formData),
+            headers: { 'Content-Type': 'application/json' },
+            mode: 'cors',
+            credentials: 'omit'
+        });
 
-            try {
-                const response = await fetch('https://script.google.com/macros/s/AKfycbwU5MRTij83rUcm0qzjJv2IE81Zs4bLyOOTAjfS5Xoe8_5cwnnQhSP5oa2lRrFpN0RcnQ/exec', {
-                    method: 'POST',
-                    body: JSON.stringify(formData),
-                    headers: { 'Content-Type': 'application/json' },
-                    mode: 'cors',  
-                    credentials: 'omit' 
-                });
+        const text = await response.text();
+        console.log("📥 Raw response:", text);
 
-                const text = await response.text();
-                console.log("📥 Raw response:", text);
+        const data = JSON.parse(text);
+        console.log("✅ Server Response:", data);
 
-                const data = JSON.parse(text); 
-
-                console.log("✅ Server Response:", data);
-                if (data.status === "success") {
-                    alert("✅ Submitted Successfully!");
-                    document.getElementById("scheduleForm").reset();
-                } else {
-                    alert("❌ Submission failed. Please try again.");
-                }
-            } catch (error) {
-                console.error('❌ Error:', error);
-                alert("⚠️ Submission Failed. Check the console for details.");
-            }
-
-            button.classList.remove("loading");
+        if (data.status === "success") {
+            alert("✅ Submitted Successfully!");
+            document.getElementById("scheduleForm").reset();
+        } else {
+            alert("❌ Submission failed. Please try again.");
         }
+    } catch (error) {
+        console.error('❌ Error:', error);
+        alert("⚠️ Submission Failed. Check the console for details.");
+    }
+}
     </script>
 </head>
 <body>
