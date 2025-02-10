@@ -33,35 +33,42 @@
     </style>
     <script>
         function submitForm() {
-            const formData = {
-                name: document.getElementById("name").value,
-                event: document.getElementById("event").value,
-                date: document.getElementById("date").value,
-                startTime: document.getElementById("startTime").value,
-                endTime: document.getElementById("endTime").value,
-                location: document.getElementById("location").value,
-                details: document.getElementById("details").value
-            };
+    const formData = {
+        name: document.getElementById("name").value,
+        event: document.getElementById("event").value,
+        date: document.getElementById("date").value,
+        startTime: document.getElementById("startTime").value,
+        endTime: document.getElementById("endTime").value,
+        location: document.getElementById("location").value,
+        details: document.getElementById("details").value
+    };
 
-            fetch('https://script.google.com/macros/s/AKfycbyqlnsSoy5eBOdBeaB74Yv3AKljTtCg7SYUb_CHIx8cH151ZOd-j-todwDUu_GcjcJTqA/exec', {
-    method: 'POST',
-    body: JSON.stringify(formData),
-    headers: { 'Content-Type': 'application/json' }
-})
-.then(response => response.text())  // อ่าน response ก่อนแปลงเป็น JSON
-.then(text => {
-    console.log("Raw response:", text);  // ตรวจสอบข้อมูลที่ส่งกลับมา
-    return JSON.parse(text);
-})
-.then(data => {
-    alert("✅ Submitted Successfully!");
-    document.getElementById("scheduleForm").reset();
-})
-.catch(error => {
-    console.error('❌ Error:', error);
-    alert("⚠️ Submission Failed. Please check console.");
-});
+    console.log("📤 Sending data:", formData);
+
+    fetch('https://script.google.com/macros/s/AKfycbyqlnsSoy5eBOdBeaB74Yv3AKljTtCg7SYUb_CHIx8cH151ZOd-j-todwDUu_GcjcJTqA/exec', {
+        method: 'POST',
+        body: JSON.stringify(formData),
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response => response.text())  // อ่าน response ก่อนแปลงเป็น JSON
+    .then(text => {
+        console.log("📥 Raw response:", text);  // ตรวจสอบข้อมูลที่ส่งกลับมา
+        return JSON.parse(text);
+    })
+    .then(data => {
+        console.log("✅ Server Response:", data);
+        if (data.status === "success") {
+            alert("✅ Submitted Successfully!");
+            document.getElementById("scheduleForm").reset();
+        } else {
+            alert("❌ Submission failed. Please try again.");
         }
+    })
+    .catch(error => {
+        console.error('❌ Error:', error);
+        alert("⚠️ Submission Failed. Check the console for details.");
+    });
+}
     </script>
 </head>
 <body>
