@@ -44,22 +44,29 @@
             };
 
             fetch('https://script.google.com/macros/s/AKfycbyqlnsSoy5eBOdBeaB74Yv3AKljTtCg7SYUb_CHIx8cH151ZOd-j-todwDUu_GcjcJTqA/exec', {
-                method: 'POST',
-                body: JSON.stringify(formData),
-                headers: { 'Content-Type': 'application/json' }
-            })
-            .then(response => response.json())
-            .then(data => {
-                alert("Submitted Successfully!");
-                document.getElementById("scheduleForm").reset();
-            })
-            .catch(error => console.error('Error:', error));
+    method: 'POST',
+    body: JSON.stringify(formData),
+    headers: { 'Content-Type': 'application/json' }
+})
+.then(response => response.text())  // อ่าน response ก่อนแปลงเป็น JSON
+.then(text => {
+    console.log("Raw response:", text);  // ตรวจสอบข้อมูลที่ส่งกลับมา
+    return JSON.parse(text);
+})
+.then(data => {
+    alert("✅ Submitted Successfully!");
+    document.getElementById("scheduleForm").reset();
+})
+.catch(error => {
+    console.error('❌ Error:', error);
+    alert("⚠️ Submission Failed. Please check console.");
+});
         }
     </script>
 </head>
 <body>
     <h2>Artist Schedule Form</h2>
-    <form id="scheduleForm">
+    <form id="Castella Time Form">
         <label for="name">Artist Name:</label>
         <input type="text" id="name" required>
 
