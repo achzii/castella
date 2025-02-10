@@ -34,25 +34,31 @@
     <script>
         function submitForm() {
     const formData = {
-        name: document.getElementById("name").value,
-        event: document.getElementById("event").value,
-        date: document.getElementById("date").value,
-        startTime: document.getElementById("startTime").value,
-        endTime: document.getElementById("endTime").value,
-        location: document.getElementById("location").value,
-        details: document.getElementById("details").value
+        name: document.getElementById("name").value.trim(),
+        event: document.getElementById("event").value.trim(),
+        date: document.getElementById("date").value.trim(),
+        startTime: document.getElementById("startTime").value.trim(),
+        endTime: document.getElementById("endTime").value.trim(),
+        location: document.getElementById("location").value.trim(),
+        details: document.getElementById("details").value.trim()
     };
+
+    if (!formData.name || !formData.event || !formData.date || !formData.startTime || !formData.endTime) {
+        alert("❌ Please fill in all required fields.");
+        return;
+    }
 
     console.log("📤 Sending data:", formData);
 
     fetch('https://script.google.com/macros/s/AKfycbxOX2a8d8SG7gVmfs-OD9qr0Tk9a-ylbucd9CVs8O7lppOd8f3CYo8tubdcLX3vI2pb/exec', {
         method: 'POST',
         body: JSON.stringify(formData),
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
+        mode: 'cors'  // ✅ รองรับ CORS
     })
     .then(response => response.text())  // อ่าน response ก่อนแปลงเป็น JSON
     .then(text => {
-        console.log("📥 Raw response:", text);  // ตรวจสอบข้อมูลที่ส่งกลับมา
+        console.log("📥 Raw response:", text);
         return JSON.parse(text);
     })
     .then(data => {
